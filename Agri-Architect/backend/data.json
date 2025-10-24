@@ -1,0 +1,52 @@
+{
+  "soil_data": {
+    "Sandy": {
+      "daily_water_loss_percent": 25,
+      "biochar_recipe_kg_per_sqm": 0.2
+    },
+    "Loamy": {
+      "daily_water_loss_percent": 15,
+      "biochar_recipe_kg_per_sqm": 0.1
+    },
+    "Clay": {
+      "daily_water_loss_percent": 8,
+      "biochar_recipe_kg_per_sqm": 0.05
+    }
+  },
+  "amendment_data": {
+    "biochar": {
+      "cost_per_kg": 2.50
+    },
+    "hydrogel": {
+      "cost_per_kg": 15.00,
+      "recipe_kg_per_sqm": 0.05,
+      "water_loss_reduction_percent": 60
+    }
+  },
+  "crop_data": {
+    "Maize": {
+      "common_pest": "Fall Armyworm",
+      "ipm_solution": {
+        "title": "Combat Fall Armyworm Naturally",
+        "technique": "Push-Pull Method",
+        "description": "Plant Desmodium between maize rows to 'push' pests away, and Napier grass around your field to 'pull' them there."
+      }
+    },
+    "Tomato": {
+      "common_pest": "Aphids",
+      "ipm_solution": {
+        "title": "Control Aphids Without Chemicals",
+        "technique": "Neem Oil Spray",
+        "description": "Create a simple, natural pesticide by mixing Neem oil with water and a little soap. Spray it on your tomato plants."
+      }
+    },
+    "Cabbage": {
+        "common_pest": "Diamondback Moth",
+        "ipm_solution": {
+          "title": "Protect Your Cabbages",
+          "technique": "Intercropping with Marigolds",
+          "description": "Planting marigold flowers alongside your cabbages can repel the Diamondback moth and other pests."
+        }
+    }
+  }
+}
