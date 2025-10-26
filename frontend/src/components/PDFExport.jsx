@@ -1,0 +1,148 @@
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import { useState } from 'react';
+
+function PDFExport({ formData, results, currency, currencyRates }) {
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const generatePDF = async () => {
+    setIsGenerating(true);
+
+    try {
+      // Create a temporary container for PDF content
+      const pdfContent = document.createElement('div');
+      pdfContent.style.width = '800px';
+      pdfContent.style.padding = '40px';
+      pdfContent.style.backgroundColor = 'white';
+      pdfContent.style.fontFamily = 'Arial, sans-serif';
+      pdfContent.style.position = 'absolute';
+      pdfContent.style.left = '-9999px';
+      
+      const { symbol, rate } = currencyRates[currency];
+      const convertedCost = (results.cost * rate).toFixed(2);
+      const today = new Date().toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      // Build the PDF content
+      pdfContent.innerHTML = `
+        <div style="text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2c6e49; padding-bottom: 20px;">
+          <h1 style="color: #2c6e49; font-size: 36px; margin: 0;">🌱 Agri-Architect</h1>
+          <p style="color: #555; font-size: 14px; margin: 5px 0;">Your Climate-Resilient Farm Plan</p>
+          <p style="color: #888; font-size: 12px; margin: 5px 0;">Generated on ${today}</p>
+        </div>
+
+        <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #2c6e49; font-size: 20px; margin-top: 0;">📋 Your Farm Details</h2>
+          <table style="width: 100%; font-size: 14px;">
+            <tr>
+              <td style="padding: 8px; font-weight: bold;">Plot Size:</td>
+              <td style="padding: 8px;">${formData.plotSize} m²</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; font-weight: bold;">Soil Type:</td>
+              <td style="padding: 8px;">${formData.soilType}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; font-weight: bold;">Crop:</td>
+              <td style="padding: 8px;">${formData.cropType}</td>
+            </tr>
+          </table>
+        </div>
+
+        <div style="background: #fff; padding: 20px; border: 2px solid #2c6e49; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #2c6e49; font-size: 20px; margin-top: 0;">🌾 Soil Amendment Recipe</h2>
+          <div style="display: flex; justify-content: space-around; text-align: center; margin: 20px 0;">
+            <div>
+              <h3 style="color: #2c6e49; font-size: 16px;">Biochar</h3>
+              <p style="font-size: 32px; font-weight: bold; color: #2c6e49; margin: 10px 0;">${results.recipe.biochar} kg</p>
+              <p style="font-size: 12px; color: #666;">Improves soil structure</p>
+            </div>
+            <div>
+              <h3 style="color: #2c6e49; font-size: 16px;">Hydrogels</h3>
+              <p style="font-size: 32px; font-weight: bold; color: #2c6e49; margin: 10px 0;">${results.recipe.hydrogel} kg</p>
+              <p style="font-size: 12px; color: #666;">Stores water like sponges</p>
+            </div>
+          </div>
+          <div style="background: #fefee3; padding: 15px; border-radius: 8px; text-align: center; margin-top: 20px;">
+            <h3 style="margin: 0; font-size: 16px; color: #555;">Total Investment</h3>
+            <p style="font-size: 36px; font-weight: bold; color: #2c6e49; margin: 10px 0;">${symbol}${convertedCost}</p>
+          </div>
+        </div>
+
+        <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #2c6e49; font-size: 20px; margin-top: 0;">🛡️ Pest Protection</h2>
+          <h3 style="font-size: 16px; color: #333;">${results.ipmSolution.title}</h3>
+          <p style="font-size: 14px; color: #555; line-height: 1.6;">${results.ipmSolution.description}</p>
+        </div>
+
+        <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+          <h2 style="color: #2c6e49; font-size: 20px; margin-top: 0;">💡 Key Benefits</h2>
+          <ul style="font-size: 14px; color: #555; line-height: 1.8;">
+            <li>Soil stays moist for <strong>${Math.max(...results.simulationData.aquaSpngeSoil.map((v, i) => v >= 40 ? i : 0))}</strong> days vs <strong>${Math.max(...results.simulationData.normalSoil.map((v, i) => v >= 40 ? i : 0))}</strong> days with normal soil</li>
+            <li>Reduce watering frequency and save water costs</li>
+            <li>Protect crops from climate-related stress</li>
+            <li>Sustainable and eco-friendly solution</li>
+          </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px solid #ddd;">
+          <p style="font-size: 12px; color: #888;">
+            This plan was generated by <strong>Agri-Architect</strong><br>
+            Building climate-resilient farms, one plan at a time.
+          </p>
+        </div>
+      `;
+
+      document.body.appendChild(pdfContent);
+
+      // Capture the content as image
+      const canvas = await html2canvas(pdfContent, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff'
+      });
+
+      // Remove temporary container
+      document.body.removeChild(pdfContent);
+
+      // Create PDF
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      
+      const imgWidth = 210; // A4 width in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+      
+      // Download
+      pdf.save(`Agri-Architect-Plan-${formData.cropType}-${today}.pdf`);
+
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  return (
+    <div style={{ textAlign: 'center', margin: '1.5rem 0' }}>
+      <button 
+        onClick={generatePDF} 
+        className="pdf-export-btn"
+        disabled={isGenerating}
+      >
+        {isGenerating ? '⏳ Generating PDF...' : '📄 Download PDF Plan'}
+      </button>
+      <p style={{ fontSize: '0.85rem', color: '#777', marginTop: '0.5rem' }}>
+        Perfect for printing, sharing on WhatsApp, or saving offline
+      </p>
+    </div>
+  );
+}
+
+export default PDFExport;
