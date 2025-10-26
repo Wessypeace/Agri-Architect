@@ -8,6 +8,7 @@ import ResultsDisplay from './components/ResultsDisplay';
 import PestShield from './components/PestShield';
 import SimulationChart from './components/SimulationChart';
 
+
 function App() {
   const [results, setResults] = useState(null);
   const [isLoading, setIsLoading] = useState(false);

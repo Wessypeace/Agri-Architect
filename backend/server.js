@@ -1,69 +1,79 @@
-// 1. Import necessary libraries
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs'); // 'fs' is the File System module, used to read files
-const path = require('path'); // 'path' helps create correct file paths
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
 
-// 2. Initialize the Express app and define the port
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 3. Use middleware
 app.use(cors());
 app.use(express.json());
 
-// 4. Load the knowledge base data from data.json
 const dbPath = path.join(__dirname, 'data.json');
 const db = JSON.parse(fs.readFileSync(dbPath, 'utf8'));
 
-// 5. Create the main API endpoint
+// In-memory storage for saved plans
+const savedPlans = {};
+
+// === MAIN CALCULATION ENDPOINT ===
 app.post('/api/calculate', (req, res) => {
   try {
-    // Get user input from the request body
     const { plotSize, soilType, cropType } = req.body;
 
-    // --- Validation (important for real apps) ---
+    // Validation - only validate required fields and soilType
     if (!plotSize || !soilType || !cropType) {
       return res.status(400).json({ error: 'Missing required fields: plotSize, soilType, cropType' });
     }
-    if (!db.soil_data[soilType] || !db.crop_data[cropType]) {
-        return res.status(400).json({ error: 'Invalid soilType or cropType provided.' });
+    
+    // Only validate soilType - cropType can be custom
+    if (!db.soil_data[soilType]) {
+      return res.status(400).json({ error: 'Invalid soilType provided.' });
     }
 
-    // --- Calculation Logic ---
-    // 1. Calculate Recipe
+    // Calculate recipe
     const biochar_needed = plotSize * db.soil_data[soilType].biochar_recipe_kg_per_sqm;
     const hydrogel_needed = plotSize * db.amendment_data.hydrogel.recipe_kg_per_sqm;
-
-    // 2. Calculate Cost
+    
     const total_cost = 
-        (biochar_needed * db.amendment_data.biochar.cost_per_kg) + 
-        (hydrogel_needed * db.amendment_data.hydrogel.cost_per_kg);
+      (biochar_needed * db.amendment_data.biochar.cost_per_kg) + 
+      (hydrogel_needed * db.amendment_data.hydrogel.cost_per_kg);
 
-    // 3. Generate Simulation Data
+    // Generate simulation data
     const labels = Array.from({ length: 20 }, (_, i) => `Day ${i + 1}`);
     const normalSoil_simulation = [];
     let currentMoistureNormal = 100;
     const normalLossRate = db.soil_data[soilType].daily_water_loss_percent / 100;
-
+    
     const aquaSpnge_simulation = [];
     let currentMoistureAqua = 100;
     const aquaLossRate = normalLossRate * (1 - (db.amendment_data.hydrogel.water_loss_reduction_percent / 100));
 
     for (let i = 0; i < 20; i++) {
-        normalSoil_simulation.push(Math.round(currentMoistureNormal));
-        currentMoistureNormal *= (1 - normalLossRate);
-        if (currentMoistureNormal < 0) currentMoistureNormal = 0;
+      normalSoil_simulation.push(Math.round(currentMoistureNormal));
+      currentMoistureNormal *= (1 - normalLossRate);
+      if (currentMoistureNormal < 0) currentMoistureNormal = 0;
 
-        aquaSpnge_simulation.push(Math.round(currentMoistureAqua));
-        currentMoistureAqua *= (1 - aquaLossRate);
-        if (currentMoistureAqua < 0) currentMoistureAqua = 0;
+      aquaSpnge_simulation.push(Math.round(currentMoistureAqua));
+      currentMoistureAqua *= (1 - aquaLossRate);
+      if (currentMoistureAqua < 0) currentMoistureAqua = 0;
     }
 
-    // 4. Get Pest Solution
-    const ipmSolution = db.crop_data[cropType].ipm_solution;
+    // Get pest solution - handle custom crops gracefully
+    let ipmSolution;
+    if (db.crop_data[cropType]) {
+      // Crop exists in database
+      ipmSolution = db.crop_data[cropType].ipm_solution;
+    } else {
+      // Custom crop - provide generic advice
+      ipmSolution = {
+        title: "General Pest Control Advice",
+        technique: "Integrated Pest Management",
+        description: `For ${cropType}, we recommend researching Integrated Pest Management (IPM) specific to your plant. General tips include encouraging beneficial insects, using natural sprays like Neem oil, and practicing crop rotation.`
+      };
+    }
 
-    // --- Send the response back to the user ---
+    // Send response
     res.json({
       recipe: {
         biochar: parseFloat(biochar_needed.toFixed(2)),
@@ -84,12 +94,60 @@ app.post('/api/calculate', (req, res) => {
   }
 });
 
+// === SAVE PLAN ENDPOINT ===
+app.post('/api/save-plan', (req, res) => {
+  try {
+    const { formData, results } = req.body;
 
-// 6. Root route and Server Start
+    if (!formData || !results) {
+      return res.status(400).json({ error: 'Missing plan data' });
+    }
+
+    // Generate unique ID
+    const planId = crypto.randomBytes(4).toString('hex');
+
+    // Save plan
+    savedPlans[planId] = {
+      formData,
+      results,
+      createdAt: new Date().toISOString()
+    };
+
+    console.log(`Plan saved with ID: ${planId}`);
+
+    res.json({ planId });
+
+  } catch (error) {
+    console.error('Error saving plan:', error);
+    res.status(500).json({ error: 'Failed to save plan' });
+  }
+});
+
+// === RETRIEVE PLAN ENDPOINT ===
+app.get('/api/plan/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const plan = savedPlans[id];
+
+    if (!plan) {
+      return res.status(404).json({ error: 'Plan not found' });
+    }
+
+    res.json(plan);
+
+  } catch (error) {
+    console.error('Error retrieving plan:', error);
+    res.status(500).json({ error: 'Failed to retrieve plan' });
+  }
+});
+
+// === ROOT ENDPOINT ===
 app.get('/', (req, res) => {
   res.send('Agri-Architect Backend is running! Use the /api/calculate endpoint to get data.');
 });
 
+// === START SERVER ===
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
