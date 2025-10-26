@@ -53,7 +53,7 @@ function App() {
     setError('');
     
     try {
-      const response = await axios.get(`http://localhost:5000/api/plan/${planId}`);
+      const response = await axios.get(`https://agri-architect-backend.onrender.com/api/plan/${planId}`);
       setFormData(response.data.formData);
       setResults(response.data.results);
     } catch (err) {
@@ -73,7 +73,7 @@ function App() {
     setFormData(formData);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/calculate', formData);
+      const response = await axios.post('https://agri-architect-backend.onrender.com/api/calculate', formData);
       console.log("Received data from backend:", response.data);
       setResults(response.data);
     } catch (err) {
@@ -94,7 +94,7 @@ function App() {
     setIsSaving(true);
 
     try {
-      const response = await axios.post('http://localhost:5000/api/save-plan', {
+      const response = await axios.post('https://agri-architect-backend.onrender.com/api/save-plan', {
         formData,
         results
       });
