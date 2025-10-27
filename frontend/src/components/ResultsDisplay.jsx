@@ -13,7 +13,6 @@ const WaterIcon = () => (
 );
 
 function ResultsDisplay({ recipe, cost, t, currency, currencyRates }) {
-  // ROI Calculator state
   const [pricePerKg, setPricePerKg] = useState(2.5);
   const [expectedYield, setExpectedYield] = useState(100);
   const [yieldIncrease, setYieldIncrease] = useState(25);
@@ -26,16 +25,15 @@ function ResultsDisplay({ recipe, cost, t, currency, currencyRates }) {
   const { symbol, rate } = currencyRates[currency];
   const convertedCost = (cost * rate).toFixed(2);
 
-  // ROI Calculations
-  const baselineYield = expectedYield; // kg
+  const baselineYield = expectedYield;
   const improvedYield = expectedYield * (1 + yieldIncrease / 100);
   const yieldGain = improvedYield - baselineYield;
   const revenueGain = yieldGain * pricePerKg * rate;
   const paybackCycles = revenueGain > 0 ? (convertedCost / revenueGain) : 0;
-  const paybackMonths = (paybackCycles * 4).toFixed(1); // Assuming 4 months per cycle
+  const paybackMonths = (paybackCycles * 4).toFixed(1);
 
   return (
-    <div className="results-card">
+    <div id="results-recipe" className="results-card">
       <h2>{t('results.recipeTitle')}</h2>
       <div className="recipe-details">
         <div className="recipe-item">
@@ -61,12 +59,8 @@ function ResultsDisplay({ recipe, cost, t, currency, currencyRates }) {
         <span className="total-cost">{symbol}{convertedCost}</span>
       </div>
 
-      {/* ROI Calculator Section */}
-      <div className="roi-section">
-        <button 
-          className="roi-toggle-btn"
-          onClick={() => setShowROI(!showROI)}
-        >
+      <div id="results-roi" className="roi-section">
+        <button className="roi-toggle-btn" onClick={() => setShowROI(!showROI)}>
           {showROI ? '▼' : '▶'} Calculate Your Payback Time
         </button>
 
@@ -77,9 +71,7 @@ function ResultsDisplay({ recipe, cost, t, currency, currencyRates }) {
             </p>
 
             <div className="roi-input-group">
-              <label htmlFor="pricePerKg">
-                <strong>Your crop's selling price (per kg):</strong>
-              </label>
+              <label htmlFor="pricePerKg"><strong>Your crop's selling price (per kg):</strong></label>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span>{symbol}</span>
                 <input
@@ -94,9 +86,7 @@ function ResultsDisplay({ recipe, cost, t, currency, currencyRates }) {
             </div>
 
             <div className="roi-input-group">
-              <label htmlFor="expectedYield">
-                <strong>Expected harvest without plan (kg):</strong>
-              </label>
+              <label htmlFor="expectedYield"><strong>Expected harvest without plan (kg):</strong></label>
               <input
                 type="number"
                 id="expectedYield"
@@ -108,9 +98,7 @@ function ResultsDisplay({ recipe, cost, t, currency, currencyRates }) {
             </div>
 
             <div className="roi-input-group">
-              <label htmlFor="yieldIncrease">
-                <strong>Yield increase with plan (%):</strong> {yieldIncrease}%
-              </label>
+              <label htmlFor="yieldIncrease"><strong>Yield increase with plan (%):</strong> {yieldIncrease}%</label>
               <input
                 type="range"
                 id="yieldIncrease"

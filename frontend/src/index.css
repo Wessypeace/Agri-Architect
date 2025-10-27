@@ -1,4 +1,63 @@
-/* === THE "SUN & SOIL" THEME === */
+/* === NAVBAR STYLING === */
+.navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  padding: 0.75rem 2rem;
+  position: fixed; /* Make it sticky */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.navbar-links button {
+  background: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.navbar-links button:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+/* Add padding to the top of main content to avoid overlap with fixed navbar */
+main {
+  padding-top: 80px; /* Adjust this value based on navbar height */
+}
 
 /* 1. DEFINE OUR NEW COLOR PALETTE & FONT */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
