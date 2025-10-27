@@ -69,71 +69,30 @@ function ResultsDisplay({ recipe, cost, t, currency, currencyRates }) {
             <p style={{ fontSize: '0.95rem', marginBottom: '1.5rem', color: '#555' }}>
               Adjust the values below to see how quickly this investment pays for itself.
             </p>
-
             <div className="roi-input-group">
               <label htmlFor="pricePerKg"><strong>Your crop's selling price (per kg):</strong></label>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span>{symbol}</span>
-                <input
-                  type="number"
-                  id="pricePerKg"
-                  step="0.1"
-                  value={pricePerKg}
-                  onChange={(e) => setPricePerKg(Number(e.target.value))}
-                  className="roi-input"
-                />
+                <input type="number" id="pricePerKg" step="0.1" value={pricePerKg} onChange={(e) => setPricePerKg(Number(e.target.value))} className="roi-input" />
               </div>
             </div>
-
             <div className="roi-input-group">
               <label htmlFor="expectedYield"><strong>Expected harvest without plan (kg):</strong></label>
-              <input
-                type="number"
-                id="expectedYield"
-                step="10"
-                value={expectedYield}
-                onChange={(e) => setExpectedYield(Number(e.target.value))}
-                className="roi-input"
-              />
+              <input type="number" id="expectedYield" step="10" value={expectedYield} onChange={(e) => setExpectedYield(Number(e.target.value))} className="roi-input" />
             </div>
-
             <div className="roi-input-group">
               <label htmlFor="yieldIncrease"><strong>Yield increase with plan (%):</strong> {yieldIncrease}%</label>
-              <input
-                type="range"
-                id="yieldIncrease"
-                min="10"
-                max="50"
-                value={yieldIncrease}
-                onChange={(e) => setYieldIncrease(Number(e.target.value))}
-                className="roi-slider"
-              />
+              <input type="range" id="yieldIncrease" min="10" max="50" value={yieldIncrease} onChange={(e) => setYieldIncrease(Number(e.target.value))} className="roi-slider" />
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', color: '#888' }}>
                 <span>10%</span>
                 <span>50%</span>
               </div>
             </div>
-
             <div className="roi-results">
-              <div className="roi-metric">
-                <span className="roi-label">Extra Harvest:</span>
-                <span className="roi-value">{yieldGain.toFixed(1)} kg</span>
-              </div>
-              <div className="roi-metric">
-                <span className="roi-label">Extra Revenue per Cycle:</span>
-                <span className="roi-value">{symbol}{revenueGain.toFixed(2)}</span>
-              </div>
-              <div className="roi-metric highlight">
-                <span className="roi-label">Payback Time:</span>
-                <span className="roi-value">
-                  {paybackCycles < 1 
-                    ? `${paybackMonths} months` 
-                    : `${paybackCycles.toFixed(1)} cycles (≈${paybackMonths} months)`}
-                </span>
-              </div>
-              <p style={{ fontSize: '0.9rem', marginTop: '1rem', fontStyle: 'italic', color: '#2c6e49' }}>
-                💡 Your investment pays for itself in <strong>{paybackCycles < 1 ? 'less than one harvest' : `${paybackCycles.toFixed(1)} harvests`}</strong>!
-              </p>
+              <div className="roi-metric"><span className="roi-label">Extra Harvest:</span><span className="roi-value">{yieldGain.toFixed(1)} kg</span></div>
+              <div className="roi-metric"><span className="roi-label">Extra Revenue per Cycle:</span><span className="roi-value">{symbol}{revenueGain.toFixed(2)}</span></div>
+              <div className="roi-metric highlight"><span className="roi-label">Payback Time:</span><span className="roi-value">{paybackCycles < 1 ? `${paybackMonths} months` : `${paybackCycles.toFixed(1)} cycles (≈${paybackMonths} months)`}</span></div>
+              <p style={{ fontSize: '0.9rem', marginTop: '1rem', fontStyle: 'italic', color: '#2c6e49' }}>💡 Your investment pays for itself in <strong>{paybackCycles < 1 ? 'less than one harvest' : `${paybackCycles.toFixed(1)} harvests`}</strong>!</p>
             </div>
           </div>
         )}

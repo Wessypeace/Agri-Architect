@@ -32,10 +32,8 @@ function WateringSchedule({ simulationData, soilType }) {
   const wateringDates = generateWateringDates();
 
   const generateICS = () => {
-    const formatDate = (date) => {
-      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
-    };
-    const events = wateringDates.map((date, index) => `BEGIN:VEVENT\nUID:watering-${index}-${Date.now()}@agri-architect.com\nDTSTAMP:${formatDate(new Date())}\nDTSTART:${formatDate(date)}\nDTEND:${formatDate(new Date(date.getTime() + 60 * 60 * 1000))}\nSUMMARY:💧 Water Your Farm (AquaSpnge Schedule)\nDESCRIPTION:Time to water your ${soilType} soil using your AquaSpnge plan. This keeps your soil moisture at optimal levels.\nLOCATION:Your Farm\nSTATUS:CONFIRMED\nSEQUENCE:0\nBEGIN:VALARM\nTRIGGER:-PT1H\nDESCRIPTION:Water your farm in 1 hour\nACTION:DISPLAY\nEND:VALARM\nEND:VEVENT`).join('\n');
+    const formatDate = (date) => date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const events = wateringDates.map((date, index) => `BEGIN:VEVENT\nUID:watering-${index}-${Date.now()}@agri-architect.com\nDTSTAMP:${formatDate(new Date())}\nDTSTART:${formatDate(date)}\nDTEND:${formatDate(new Date(date.getTime() + 60 * 60 * 1000))}\nSUMMARY:💧 Water Your Farm (AquaSpnge Schedule)\nDESCRIPTION:Time to water your ${soilType} soil using your AquaSpnge plan.\nLOCATION:Your Farm\nSTATUS:CONFIRMED\nSEQUENCE:0\nBEGIN:VALARM\nTRIGGER:-PT1H\nDESCRIPTION:Water your farm in 1 hour\nACTION:DISPLAY\nEND:VALARM\nEND:VEVENT`).join('\n');
     const icsContent = `BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Agri-Architect//Watering Schedule//EN\nCALSCALE:GREGORIAN\nMETHOD:PUBLISH\nX-WR-CALNAME:AquaSpnge Watering Schedule\nX-WR-TIMEZONE:UTC\n${events}\nEND:VCALENDAR`;
     return icsContent;
   };
@@ -84,14 +82,10 @@ function WateringSchedule({ simulationData, soilType }) {
               </li>
             ))}
           </ul>
-
           <div className="schedule-actions">
-            <button onClick={downloadICS} className="download-calendar-btn">
-              📥 Download Calendar (.ics)
-            </button>
+            <button onClick={downloadICS} className="download-calendar-btn">📥 Download Calendar (.ics)</button>
             <p style={{ fontSize: '0.85rem', color: '#777', marginTop: '0.5rem' }}>Compatible with Google Calendar, Apple Calendar, Outlook, and more</p>
           </div>
-
           <div className="reminder-section">
             <h4 style={{ marginBottom: '0.75rem', fontSize: '1rem' }}>🔔 Set Reminders</h4>
             <p style={{ fontSize: '0.9rem', color: '#555', marginBottom: '1rem' }}>Get notified before each watering event:</p>

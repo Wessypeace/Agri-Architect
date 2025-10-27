@@ -3,12 +3,13 @@
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   padding: 0.75rem 2rem;
-  position: fixed; /* Make it sticky */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .navbar.scrolled {
@@ -54,76 +55,113 @@
   color: var(--primary-color);
 }
 
-/* Add padding to the top of main content to avoid overlap with fixed navbar */
-main {
-  padding-top: 80px; /* Adjust this value based on navbar height */
+.mobile-menu-icon {
+  display: none; /* Hidden on desktop */
+  cursor: pointer;
 }
 
-/* 1. DEFINE OUR NEW COLOR PALETTE & FONT */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+.mobile-menu-icon .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  margin: 5px auto;
+  transition: all 0.3s ease-in-out;
+  background-color: var(--primary-color);
+}
 
+.mobile-menu-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.mobile-menu-dropdown button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  font-size: 1.1rem;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 900px) {
+  .desktop-links {
+    display: none;
+  }
+  .mobile-menu-icon {
+    display: block;
+  }
+  .mobile-menu-dropdown.open {
+    display: block;
+  }
+  .mobile-menu-icon .bar.open:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .mobile-menu-icon .bar.open:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-menu-icon .bar.open:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+}
+
+/* Add padding to the top of main content to avoid overlap with fixed navbar */
+main {
+  padding-top: 80px !important; /* Use !important to override previous setting */
+}
+
+
+/* === THE "SUN & SOIL" THEME === */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 :root {
-  --primary-color: #2c6e49;  /* A rich, deep forest green */
-  --secondary-color: #fefee3; /* A warm, sun-bleached soil yellow */
-  --accent-color: #ffc947;   /* A vibrant, sunny gold for buttons */
-  --text-color: #2b2b2b;      /* A softer, dark charcoal instead of pure black */
+  --primary-color: #2c6e49;
+  --secondary-color: #fefee3;
+  --accent-color: #ffc947;
+  --text-color: #2b2b2b;
   --light-text-color: #f0f0f0;
   --border-color: #d1d1d1;
   --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
-
-/* 2. APPLY THE BASE STYLES */
-/* New animated body background */
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
   color: var(--text-color);
   line-height: 1.7;
-
-  /* The magic starts here */
   background: linear-gradient(120deg, #fefee3, #fffbe6, #fefee3);
   background-size: 200% 200%;
   animation: background-pan 15s ease infinite;
 }
-
-/* Keyframes for the background pan */
 @keyframes background-pan {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
-
 main {
   max-width: 800px;
   margin: 2rem auto;
   padding: 1rem;
 }
-
 header {
   text-align: center;
   margin-bottom: 2.5rem;
 }
-
 header h1 {
   font-size: 2.8rem;
   font-weight: 700;
   color: var(--primary-color);
   letter-spacing: -1px;
 }
-
 header p {
   font-size: 1.1rem;
   color: #555;
 }
-
-/* 3. STYLE THE FORM CONTAINER */
 .form-container {
   background-color: #fff;
   padding: 2.5rem;
@@ -132,18 +170,15 @@ header p {
   margin-bottom: 3rem;
   border: 1px solid var(--border-color);
 }
-
 .form-group {
   margin-bottom: 1.5rem;
 }
-
 .form-group label {
   display: block;
   font-weight: 600;
   margin-bottom: 0.75rem;
   font-size: 1.05rem;
 }
-
 .form-group input,
 .form-group select {
   width: 100%;
@@ -155,15 +190,12 @@ header p {
   box-sizing: border-box;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
   border-color: var(--primary-color);
   box-shadow: 0 0 0 3px rgba(44, 110, 73, 0.2);
 }
-
-/* 4. STYLE THE BUTTONS WITH OUR ACCENT COLOR */
 .calculate-btn {
   display: block;
   width: 100%;
@@ -179,26 +211,22 @@ header p {
   transition: transform 0.2s, box-shadow 0.2s;
   margin-top: 1.5rem;
 }
-
 .calculate-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(255, 201, 71, 0.5);
 }
-
-/* 5. STYLE THE RESULTS CARDS */
 .results-container {
   display: grid;
   gap: 2rem;
+  animation: fadeIn 0.8s ease-out forwards;
 }
-
 .results-card {
   background-color: #fff;
   padding: 2.5rem;
   border-radius: 12px;
   box-shadow: var(--card-shadow);
-  border-top: 6px solid var(--primary-color); /* Top border feels more modern */
+  border-top: 6px solid var(--primary-color);
 }
-
 .results-card h2 {
   margin-top: 0;
   font-weight: 700;
@@ -206,21 +234,18 @@ header p {
   border-bottom: 1px solid #eee;
   padding-bottom: 0.75rem;
 }
-
 .recipe-details {
   display: flex;
   justify-content: space-around;
   text-align: center;
   margin: 2rem 0;
 }
-
 .recipe-item .amount {
   font-size: 2.2rem;
   font-weight: 700;
   color: var(--primary-color);
   display: block;
 }
-
 .cost-summary {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -228,44 +253,22 @@ header p {
   border-radius: 8px;
   text-align: center;
 }
-
 .cost-summary h3 {
   margin: 0 0 0.5rem 0;
   font-weight: 600;
 }
-
 .cost-summary .total-cost {
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--primary-color);
 }
-
-/* 6. Chart Container Specifics */
 .chart-container {
   padding: 1.5rem;
 }
-
-/* === ANIMATIONS & PERSONALITY === */
-
-/* 1. Keyframe animation for fading in */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-/* 2. Apply the animation to the results container */
-.results-container {
-  /* ... keep existing styles like display:grid and gap ... */
-  animation: fadeIn 0.8s ease-out forwards;
-}
-
-/* 3. A more engaging loading message */
 .loading-message {
   text-align: center;
   font-size: 1.2rem;
@@ -273,8 +276,6 @@ header p {
   color: var(--primary-color);
   padding: 2rem;
 }
-
-/* === ICON STYLING === */
 .icon-wrapper {
   display: flex;
   justify-content: center;
@@ -287,13 +288,10 @@ header p {
   border: 2px solid var(--primary-color);
   color: var(--primary-color);
 }
-
-/* === LOADING SKELETON === */
 .loading-skeleton {
   margin: 2rem 0;
   text-align: center;
 }
-
 .skeleton-card {
   background-color: #fff;
   padding: 2rem;
@@ -301,7 +299,6 @@ header p {
   box-shadow: var(--card-shadow);
   margin-bottom: 1rem;
 }
-
 .skeleton-title,
 .skeleton-line {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
@@ -309,32 +306,20 @@ header p {
   animation: skeleton-loading 1.5s ease-in-out infinite;
   border-radius: 4px;
 }
-
 .skeleton-title {
   height: 24px;
   width: 60%;
   margin-bottom: 1rem;
 }
-
 .skeleton-line {
   height: 16px;
   margin-bottom: 0.75rem;
 }
-
-.skeleton-line:last-child {
-  width: 80%;
-}
-
+.skeleton-line:last-child { width: 80%; }
 @keyframes skeleton-loading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
-
-/* === ERROR CARD === */
 .error-card {
   background-color: #fff;
   padding: 2rem;
@@ -344,7 +329,6 @@ header p {
   text-align: center;
   border-left: 5px solid #e74c3c;
 }
-
 .retry-btn {
   padding: 0.75rem 1.5rem;
   background-color: var(--primary-color);
@@ -356,31 +340,24 @@ header p {
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .retry-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(44, 110, 73, 0.3);
 }
-
-/* === SETTINGS SELECTORS === */
 header select,
 header label {
   font-size: 0.9rem;
 }
-
 header select {
   padding: 0.5rem;
   border-radius: 6px;
   border: 1px solid var(--border-color);
 }
-
-/* === ROI CALCULATOR SECTION === */
 .roi-section {
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--border-color);
 }
-
 .roi-toggle-btn {
   width: 100%;
   padding: 1rem;
@@ -394,12 +371,7 @@ header select {
   text-align: left;
   transition: background-color 0.2s, transform 0.2s;
 }
-
-.roi-toggle-btn:hover {
-  background-color: #fffacd;
-  transform: translateY(-1px);
-}
-
+.roi-toggle-btn:hover { background-color: #fffacd; transform: translateY(-1px); }
 .roi-calculator {
   margin-top: 1.5rem;
   padding: 1.5rem;
@@ -407,17 +379,14 @@ header select {
   border-radius: 8px;
   border: 1px solid var(--border-color);
 }
-
 .roi-input-group {
   margin-bottom: 1.5rem;
 }
-
 .roi-input-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-size: 0.95rem;
 }
-
 .roi-input {
   width: 100%;
   padding: 0.75rem;
@@ -427,7 +396,6 @@ header select {
   font-family: 'Poppins', sans-serif;
   box-sizing: border-box;
 }
-
 .roi-slider {
   width: 100%;
   height: 8px;
@@ -436,7 +404,6 @@ header select {
   outline: none;
   margin-bottom: 0.5rem;
 }
-
 .roi-slider::-webkit-slider-thumb {
   appearance: none;
   width: 20px;
@@ -445,7 +412,6 @@ header select {
   background: var(--primary-color);
   cursor: pointer;
 }
-
 .roi-slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
@@ -454,7 +420,6 @@ header select {
   cursor: pointer;
   border: none;
 }
-
 .roi-results {
   margin-top: 1.5rem;
   padding: 1.5rem;
@@ -462,7 +427,6 @@ header select {
   border-radius: 8px;
   border-left: 4px solid var(--primary-color);
 }
-
 .roi-metric {
   display: flex;
   justify-content: space-between;
@@ -470,34 +434,23 @@ header select {
   padding: 0.75rem 0;
   border-bottom: 1px solid #eee;
 }
-
-.roi-metric:last-of-type {
-  border-bottom: none;
-}
-
+.roi-metric:last-of-type { border-bottom: none; }
 .roi-metric.highlight {
   background-color: var(--secondary-color);
   padding: 1rem;
   margin-top: 1rem;
   border-radius: 6px;
 }
-
 .roi-label {
   font-size: 1rem;
   color: #555;
 }
-
 .roi-value {
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--primary-color);
 }
-
-.roi-metric.highlight .roi-value {
-  font-size: 1.6rem;
-}
-
-/* === SHARE BUTTON & LINK === */
+.roi-metric.highlight .roi-value { font-size: 1.6rem; }
 .share-btn {
   padding: 1rem 2rem;
   background: linear-gradient(145deg, #3498db, #2980b9);
@@ -510,17 +463,14 @@ header select {
   box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
   transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .share-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
 }
-
 .share-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
-
 .share-link-box {
   margin-top: 1rem;
   padding: 1rem;
@@ -531,7 +481,6 @@ header select {
   margin-left: auto;
   margin-right: auto;
 }
-
 .share-link-input {
   width: 100%;
   padding: 0.75rem;
@@ -543,30 +492,44 @@ header select {
   background-color: white;
   cursor: pointer;
 }
-
 .share-link-input:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
 }
-
-/* === WATERING SCHEDULE === */
+.pdf-export-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(145deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.pdf-export-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
+}
+.pdf-export-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .watering-schedule {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-top: none;
 }
-
 .watering-schedule h2,
 .watering-schedule h3,
 .watering-schedule h4 {
   color: white;
 }
-
 .schedule-summary {
   text-align: center;
   margin-bottom: 1.5rem;
 }
-
 .watering-interval-box {
   display: inline-flex;
   align-items: center;
@@ -576,18 +539,15 @@ header select {
   border-radius: 12px;
   margin: 1rem 0;
 }
-
 .interval-label {
   font-size: 1.1rem;
   font-weight: 500;
 }
-
 .interval-value {
   font-size: 3rem;
   font-weight: 700;
   color: #ffd700;
 }
-
 .schedule-toggle-btn {
   width: 100%;
   padding: 1rem;
@@ -601,24 +561,18 @@ header select {
   text-align: left;
   transition: background-color 0.2s;
 }
-
-.schedule-toggle-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
+.schedule-toggle-btn:hover { background-color: rgba(255, 255, 255, 0.3); }
 .schedule-details {
   margin-top: 1.5rem;
   padding: 1.5rem;
   background-color: rgba(255, 255, 255, 0.15);
   border-radius: 8px;
 }
-
 .watering-dates-list {
   list-style: none;
   padding: 0;
   margin: 0 0 1.5rem 0;
 }
-
 .watering-date-item {
   display: flex;
   align-items: center;
@@ -629,7 +583,6 @@ header select {
   margin-bottom: 0.75rem;
   border-left: 4px solid #ffd700;
 }
-
 .date-number {
   display: flex;
   align-items: center;
@@ -642,13 +595,11 @@ header select {
   border-radius: 50%;
   font-size: 1rem;
 }
-
 .date-text {
   flex-grow: 1;
   font-size: 1.05rem;
   font-weight: 500;
 }
-
 .date-badge {
   background-color: #ff6b6b;
   color: white;
@@ -657,12 +608,10 @@ header select {
   font-size: 0.85rem;
   font-weight: 600;
 }
-
 .schedule-actions {
   text-align: center;
   margin: 1.5rem 0;
 }
-
 .download-calendar-btn {
   padding: 1rem 2rem;
   background: linear-gradient(145deg, #ffd700, #ffa500);
@@ -675,18 +624,15 @@ header select {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s, box-shadow 0.2s;
 }
-
 .download-calendar-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
 }
-
 .reminder-section {
   margin-top: 2rem;
   padding-top: 1.5rem;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
 }
-
 .reminder-btn {
   padding: 0.75rem 1.5rem;
   background-color: rgba(255, 255, 255, 0.2);
@@ -698,36 +644,8 @@ header select {
   cursor: not-allowed;
   opacity: 0.6;
 }
-
 .reminder-btn:not(:disabled) {
   cursor: pointer;
   opacity: 1;
 }
-
-.reminder-btn:not(:disabled):hover {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* === PDF EXPORT BUTTON === */
-.pdf-export-btn {
-  padding: 1rem 2rem;
-  background: linear-gradient(145deg, #e74c3c, #c0392b);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.pdf-export-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
-}
-
-.pdf-export-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+.reminder-btn:not(:disabled):hover { background-color: rgba(255, 255, 255, 0.3); }
