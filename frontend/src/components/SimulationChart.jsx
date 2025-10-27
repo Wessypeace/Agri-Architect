@@ -26,14 +26,20 @@ function SimulationChart({ simulationData, title, t }) {
     return null;
   }
 
+  // --- NEW RESPONSIVE CHART OPTIONS ---
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // IMPORTANT: Allows the chart to shrink vertically
     plugins: {
-      legend: { position: 'top' },
+      legend: {
+        position: 'top',
+      },
       title: {
         display: true,
         text: title,
-        font: { size: 18 },
+        font: {
+          size: 16, // Slightly smaller title for mobile
+        },
       },
     },
     scales: {
@@ -50,8 +56,22 @@ function SimulationChart({ simulationData, title, t }) {
           display: true,
           text: t('chart.xAxisLabel'),
         },
-      },
-    },
+        // THIS IS THE MAGIC FOR MOBILE RESPONSIVENESS:
+        ticks: {
+          callback: function(value, index, ticks) {
+            // If the screen is small (less than 768px wide), only show a label every 4 days.
+            // Otherwise, show all labels.
+            if (window.innerWidth < 768) {
+              return index % 4 === 0 ? this.getLabelForValue(value) : '';
+            } else {
+              return this.getLabelForValue(value);
+            }
+          },
+          maxRotation: 45, // Rotate labels slightly if they still overlap
+          minRotation: 0,
+        }
+      }
+    }
   };
 
   const data = {
@@ -72,9 +92,12 @@ function SimulationChart({ simulationData, title, t }) {
     ],
   };
 
+  // The 'return' statement is now wrapped in a div to control height
   return (
     <div className="results-card chart-container">
-      <Line options={options} data={data} />
+      <div style={{ position: 'relative', height: '400px' }}>
+        <Line options={options} data={data} />
+      </div>
     </div>
   );
 }
