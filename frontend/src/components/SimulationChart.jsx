@@ -58,7 +58,7 @@ function SimulationChart({ simulationData, title, t }) {
         },
         // THIS IS THE MAGIC FOR MOBILE RESPONSIVENESS:
         ticks: {
-          callback: function(value, index, ticks) {
+          callback: function(value, index) {
             // If the screen is small (less than 768px wide), only show a label every 4 days.
             // Otherwise, show all labels.
             if (window.innerWidth < 768) {
