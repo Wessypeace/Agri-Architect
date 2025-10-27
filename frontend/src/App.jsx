@@ -168,14 +168,15 @@ function App() {
         )}
 
         {results && (
-          <>
-            <div id="results-export" style={{ textAlign: 'center' }}>
-              <PDFExport 
-                formData={formData} 
-                results={results} 
-                currency={currency}
-                currencyRates={currencyRates}
-              />
+          <div className="results-wrapper">
+            <div className="section-heading">
+              <h2>Your Full Resilience Plan</h2>
+              <p>Here is your personalized, data-driven plan. Scroll down to see all features.</p>
+            </div>
+
+            <div id="results-export" className="feature-section">
+              <h3 className="feature-heading">1. Export & Share Your Plan</h3>
+              <PDFExport formData={formData} results={results} currency={currency} currencyRates={currencyRates} />
               <div style={{ marginTop: '1.5rem' }}>
                 <button onClick={handleSharePlan} className="share-btn" disabled={isSaving}>
                   {isSaving ? '⏳ Generating Link...' : '🔗 Share This Plan'}
@@ -183,35 +184,32 @@ function App() {
                 {shareLink && (
                   <div className="share-link-box">
                     <p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>✅ Share link:</p>
-                    <input 
-                      type="text" 
-                      value={shareLink} 
-                      readOnly 
-                      className="share-link-input"
-                      onClick={(e) => e.target.select()}
-                    />
+                    <input type="text" value={shareLink} readOnly className="share-link-input" onClick={(e) => e.target.select()} />
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="results-container">
+            <div id="results-simulation" className="feature-section">
+              <h3 className="feature-heading">2. The Proof: Soil Moisture Simulation</h3>
               <SimulationChart simulationData={results.simulationData} title={t('chart.title')} t={t} />
-              <ResultsDisplay 
-                recipe={results.recipe} 
-                cost={results.cost} 
-                t={t} 
-                currency={currency}
-                currencyRates={currencyRates}
-              />
-              <PestShield ipmSolution={results.ipmSolution} t={t} />
-              <WateringSchedule 
-                simulationData={results.simulationData} 
-                soilType={formData?.soilType || 'Sandy'} 
-                t={t} 
-              />
             </div>
-          </>
+
+            <div id="results-recipe" className="feature-section">
+              <h3 className="feature-heading">3. Your Recipe & ROI</h3>
+              <ResultsDisplay recipe={results.recipe} cost={results.cost} t={t} currency={currency} currencyRates={currencyRates} />
+            </div>
+            
+            <div className="feature-section">
+              <h3 className="feature-heading">4. Pest Protection</h3>
+              <PestShield ipmSolution={results.ipmSolution} t={t} />
+            </div>
+
+            <div id="results-watering" className="feature-section">
+              <h3 className="feature-heading">5. Smart Watering Schedule</h3>
+              <WateringSchedule simulationData={results.simulationData} soilType={formData?.soilType || 'Sandy'} t={t} />
+            </div>
+          </div>
         )}
       </main>
     </>

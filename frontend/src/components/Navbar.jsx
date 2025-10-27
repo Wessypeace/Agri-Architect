@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 const scrollToSection = (id) => {
   const element = document.getElementById(id);
   if (element) {
-    const yOffset = -80;
+    const yOffset = -80; // Offset for fixed navbar
     const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
     window.scrollTo({ top: y, behavior: 'smooth' });
   }
@@ -60,13 +60,11 @@ function Navbar({ resultsVisible }) {
           <div className={`bar ${mobileMenuOpen ? 'open' : ''}`}></div>
           <div className={`bar ${mobileMenuOpen ? 'open' : ''}`}></div>
         </div>
+      </div>
 
-        {/* Mobile Menu Dropdown */}
-        {mobileMenuOpen && (
-          <div className="mobile-menu-dropdown">
-            {renderLinks()}
-          </div>
-        )}
+      {/* Mobile Menu Dropdown - now has the 'open' class applied conditionally */}
+      <div className={`mobile-menu-dropdown ${mobileMenuOpen ? 'open' : ''}`}>
+        {renderLinks()}
       </div>
     </nav>
   );
